@@ -1,0 +1,199 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            maximum: 100
+            minimum: 1
+      responses:
+        '200':
+          description: A paged array of pets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        default:
+          description: unexpected error. see org.zalando.problem
+
+    post:
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error. see org.zalando.problem
+
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        default:
+          description: unexpected error. see org.zalando.problem
+
+  /pets2:
+    post:
+      operationId: createPets2
+      tags:
+        - pets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '201':
+          description: success
+        default:
+          description: unexpected error. see org.zalando.problem
+
+  /foo/{id}:
+    get:
+      operationId: get
+      tags:
+        - foo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: get pets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error. see org.zalando.problem
+    delete:
+      operationId: delete
+      tags:
+        - foo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '204':
+          description: delete success
+        default:
+          description: unexpected error. see org.zalando.problem
+
+  /foo:
+    post:
+      description: create pets
+      operationId: post
+      tags:
+        - foo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPet"
+      responses:
+        '201':
+          description: created
+          headers:
+            'Location' :
+              description: new pet details url
+              schema:
+                type: string
+    get:
+      description: gett pet list
+      operationId: list
+      tags:
+        - foo
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            minimum: 1
+            maximum: 500
+      responses:
+        '200':
+          description: pet list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        default:
+          description: error
+
+components:
+  schemas:
+    NewPet:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        tag:
+          type: string
+    Pet:
+      allOf:
+        - $ref: '#/components/schemas/NewPet'
+        -
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int64
+    Pets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pet"
