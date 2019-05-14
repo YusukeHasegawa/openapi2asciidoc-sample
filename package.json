@@ -1,5 +1,5 @@
 {
-  "name": "openapi2swagger",
+  "name": "openapi2asciidoc",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
