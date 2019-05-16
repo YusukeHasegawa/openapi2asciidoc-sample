@@ -10,6 +10,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
 
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <swagger2markup.plugin.version>1.3.7</swagger2markup.plugin.version>
